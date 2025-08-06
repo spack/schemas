@@ -2,7 +2,7 @@
 
 > [!TIP]
 > The schemas from this repository are part of https://www.schemastore.org/.
-> If your editor (or an extension) supports JSON Schema Store, validation and autocompletion of Spack configuration files should be **automatic**.
+> If your editor (or an extension) supports JSON Schema Store, validation and autocompletion of Spack configuration files should be **automatic** based on the filename or path (e.g. `spack.yaml or `~/.spack/config.yaml`).
 
 To get validation and autocompletion of Spack configuration files, enable an extension for the
 YAML Language Server Protocol (LSP) in your editor of choice.
@@ -105,7 +105,7 @@ YAML Language Server Protocol (LSP) in your editor of choice.
 [vsc]: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
 [yamlls]: https://github.com/redhat-developer/yaml-language-server
 
-Then add the following line at the top of your YAML file:
+Optionally, add the following line at the top of your YAML file:
 
 ## Environments (spack.yaml)
 
