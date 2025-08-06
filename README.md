@@ -1,5 +1,9 @@
 # Editor support for Spack config files
 
+> [!TIP]
+> The schemas from this repository are part of https://www.schemastore.org/.
+> If your editor (or an extension) supports JSON Schema Store, validation and autocompletion of Spack configuration files should be **automatic**.
+
 To get validation and autocompletion of Spack configuration files, enable an extension for the
 YAML Language Server Protocol (LSP) in your editor of choice.
 
