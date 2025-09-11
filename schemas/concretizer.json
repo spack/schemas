@@ -154,7 +154,7 @@
 },
 "max_dupes":{
 "type":"object",
-"additional_properties":{
+"additionalProperties":{
 "type":"integer",
 "minimum":1
 }

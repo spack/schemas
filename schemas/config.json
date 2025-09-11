@@ -55,8 +55,6 @@
 ]
 },
 "install_tree":{
-"anyOf":[
-{
 "type":"object",
 "properties":{
 "root":{
@@ -83,11 +81,6 @@
 }
 }
 },
-{
-"type":"string"
-}
-]
-},
 "concretization_cache":{
 "type":"object",
 "properties":{
@@ -110,9 +103,6 @@
 "install_hash_length":{
 "type":"integer",
 "minimum":1
-},
-"install_path_scheme":{
-"type":"string"
 },
 "build_stage":{
 "oneOf":[
@@ -197,7 +187,7 @@
 },
 "concurrent_packages":{
 "type":"integer",
-"minimum:":1
+"minimum":1
 },
 "ccache":{
 "type":"boolean"
@@ -248,30 +238,7 @@
 }
 }
 }
-},
-"deprecatedProperties":[
-{
-"names":[
-"concretizer"
-],
-"message":"Spack supports only clingo as a concretizer from v0.23. The config:concretizer config option is ignored.",
-"error":false
-},
-{
-"names":[
-"install_missing_compilers"
-],
-"message":"The config:install_missing_compilers option has been deprecated in Spack v0.23, and is currently ignored. It will be removed from config in Spack v1.0.",
-"error":false
-},
-{
-"names":[
-"install_path_scheme"
-],
-"message":"The config:install_path_scheme option was deprecated in Spack v0.16 in favor of config:install_tree:projections:all. It will be removed in Spack v1.0.",
-"error":false
 }
-]
 }
 }
 }

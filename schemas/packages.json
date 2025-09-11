@@ -559,7 +559,7 @@
 }
 }
 },
-"additionalProperties":true,
+"additionalProperties":false,
 "required":[
 "spec"
 ]

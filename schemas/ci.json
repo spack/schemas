@@ -5,6 +5,8 @@
 "additionalProperties":false,
 "properties":{
 "ci":{
+"type":"object",
+"properties":{
 "pipeline-gen":{
 "type":"array",
 "items":{
@@ -1628,10 +1630,8 @@
 },
 "target":{
 "type":"string",
-"enum":[
-"gitlab"
-],
 "default":"gitlab"
+}
 }
 }
 }
