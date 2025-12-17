@@ -6,14 +6,17 @@
 "properties":{
 "packages":{
 "type":"object",
+"description":"Package-specific build settings and external package configurations",
 "default":{},
 "properties":{
 "all":{
 "type":"object",
+"description":"Default settings that apply to all packages (can be overridden by package-specific settings)",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "require":{
+"description":"Package requirements that must be satisfied during concretization",
 "oneOf":[
 {
 "type":"array",
@@ -27,22 +30,27 @@
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where exactly one must be satisfied"
 },
 "any_of":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where at least one must be satisfied"
 },
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Single spec requirement that must be satisfied"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom error message when requirement is not satisfiable"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this requirement"
 }
 }
 },
@@ -58,6 +66,7 @@
 ]
 },
 "prefer":{
+"description":"Strong package preferences that influence concretization without imposing hard constraints",
 "type":"array",
 "items":{
 "oneOf":[
@@ -66,13 +75,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -83,6 +95,7 @@
 }
 },
 "conflict":{
+"description":"Package conflicts that prevent certain spec combinations",
 "type":"array",
 "items":{
 "oneOf":[
@@ -91,13 +104,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -109,6 +125,7 @@
 },
 "target":{
 "type":"array",
+"description":"Ordered list of soft preferences for target architectures for all packages (ignored if the concretizer can reuse existing installations)",
 "default":[],
 "items":{
 "type":"string"
@@ -116,6 +133,7 @@
 },
 "compiler":{
 "type":"array",
+"description":"Soft preferences for compiler specs for all packages (deprecated)",
 "default":[],
 "items":{
 "type":"string"
@@ -123,10 +141,12 @@
 },
 "buildable":{
 "type":"boolean",
+"description":"Whether packages should be built from source (false prevents building)",
 "default":true
 },
 "permissions":{
 "type":"object",
+"description":"File permissions settings for package installations",
 "additionalProperties":false,
 "properties":{
 "read":{
@@ -135,7 +155,8 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can read the files installed by a package"
 },
 "write":{
 "type":"string",
@@ -143,31 +164,33 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can write to the files installed by a package"
 },
 "group":{
-"type":"string"
+"type":"string",
+"description":"The group that owns the files installed by a package"
 }
 }
 },
 "package_attributes":{
 "type":"object",
+"description":"Class-level attributes to assign to package instances (accessible in package.py methods)",
 "additionalProperties":false,
 "patternProperties":{
-"\\w+":{}
+"^[a-zA-Z_]\\w*$":{}
 }
 },
 "providers":{
 "type":"object",
+"description":"Soft preferences for providers of virtual packages (ignored if the concretizer can reuse existing installations)",
 "default":{},
-"additionalProperties":false,
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "type":"array",
+"description":"Ordered list of preferred providers for this virtual package",
 "default":[],
 "items":{
 "type":"string"
-}
 }
 }
 },
@@ -182,7 +205,8 @@
 "type":"string"
 }
 }
-]
+],
+"description":"Soft variant preferences as a single spec string or list of variant specifications (ignored if the concretizer can reuse existing installations)"
 }
 },
 "deprecatedProperties":[
@@ -198,10 +222,12 @@
 },
 "additionalProperties":{
 "type":"object",
+"description":"Package-specific settings that override defaults from 'all'",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "require":{
+"description":"Package requirements that must be satisfied during concretization",
 "oneOf":[
 {
 "type":"array",
@@ -215,22 +241,27 @@
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where exactly one must be satisfied"
 },
 "any_of":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where at least one must be satisfied"
 },
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Single spec requirement that must be satisfied"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom error message when requirement is not satisfiable"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this requirement"
 }
 }
 },
@@ -246,6 +277,7 @@
 ]
 },
 "prefer":{
+"description":"Strong package preferences that influence concretization without imposing hard constraints",
 "type":"array",
 "items":{
 "oneOf":[
@@ -254,13 +286,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -271,6 +306,7 @@
 }
 },
 "conflict":{
+"description":"Package conflicts that prevent certain spec combinations",
 "type":"array",
 "items":{
 "oneOf":[
@@ -279,13 +315,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -297,6 +336,7 @@
 },
 "version":{
 "type":"array",
+"description":"Ordered list of soft preferences for versions for this package (ignored if the concretizer can reuse existing installations)",
 "default":[],
 "items":{
 "anyOf":[
@@ -311,10 +351,12 @@
 },
 "buildable":{
 "type":"boolean",
+"description":"Whether this package should be built from source (false prevents building)",
 "default":true
 },
 "permissions":{
 "type":"object",
+"description":"File permissions settings for package installations",
 "additionalProperties":false,
 "properties":{
 "read":{
@@ -323,7 +365,8 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can read the files installed by a package"
 },
 "write":{
 "type":"string",
@@ -331,18 +374,21 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can write to the files installed by a package"
 },
 "group":{
-"type":"string"
+"type":"string",
+"description":"The group that owns the files installed by a package"
 }
 }
 },
 "package_attributes":{
 "type":"object",
+"description":"Class-level attributes to assign to package instances (accessible in package.py methods)",
 "additionalProperties":false,
 "patternProperties":{
-"\\w+":{}
+"^[a-zA-Z_]\\w*$":{}
 }
 },
 "variants":{
@@ -356,48 +402,74 @@
 "type":"string"
 }
 }
-]
+],
+"description":"Soft variant preferences as a single spec string or list of variant specifications (ignored if the concretizer can reuse existing installations)"
 },
 "externals":{
 "type":"array",
+"description":"List of external, system-installed instances of this package",
 "items":{
 "type":"object",
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec string describing this external package instance. Typically name@version and relevant variants"
 },
 "prefix":{
-"type":"string"
+"type":"string",
+"description":"Installation prefix path for this external package (typically /usr, *excluding* bin/, lib/, etc.)"
 },
 "modules":{
 "type":"array",
+"description":"Environment modules to load for this external package",
 "items":{
 "type":"string"
 }
 },
+"id":{
+"type":"string"
+},
 "extra_attributes":{
 "type":"object",
+"description":"Additional information needed by the package to use this external",
 "additionalProperties":{
 "type":"string"
 },
 "properties":{
 "compilers":{
 "type":"object",
+"description":"Compiler executable paths for external compiler packages",
+"properties":{
+"c":{
+"type":"string",
+"description":"Path to the C compiler executable (e.g. /usr/bin/gcc)"
+},
+"cxx":{
+"type":"string",
+"description":"Path to the C++ compiler executable (e.g. /usr/bin/g++)"
+},
+"fortran":{
+"type":"string",
+"description":"Path to the Fortran compiler executable (e.g. /usr/bin/gfortran)"
+}
+},
 "patternProperties":{
-"(^\\w[\\w-]*)":{
+"^\\w":{
 "type":"string"
 }
-}
+},
+"additionalProperties":false
 },
 "environment":{
 "type":"object",
+"description":"Environment variable modifications to apply at runtime",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -406,27 +478,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -435,13 +500,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -450,13 +514,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -465,7 +528,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -475,7 +537,8 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of extra rpaths to inject by Spack's compiler wrappers"
 },
 "implicit_rpaths":{
 "anyOf":[
@@ -488,11 +551,13 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"List of non-default link directories to register at runtime as rpaths"
 },
 "flags":{
 "type":"object",
 "additionalProperties":false,
+"description":"Flags to pass to the compiler during compilation and linking",
 "properties":{
 "cflags":{
 "anyOf":[
@@ -502,7 +567,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C compiler, e.g. -std=c11"
 },
 "cxxflags":{
 "anyOf":[
@@ -512,7 +578,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C++ compiler, e.g. -std=c++14"
 },
 "fflags":{
 "anyOf":[
@@ -522,7 +589,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for Fortran 77 compiler, e.g. -ffixed-line-length-none"
 },
 "cppflags":{
 "anyOf":[
@@ -532,7 +600,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C preprocessor, e.g. -DFOO=1"
 },
 "ldflags":{
 "anyOf":[
@@ -542,7 +611,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags passed to the compiler driver during linking, e.g. -Wl,--gc-sections"
 },
 "ldlibs":{
 "anyOf":[
@@ -552,8 +622,48 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for linker libraries, e.g. -lpthread"
 }
+}
+}
+}
+},
+"dependencies":{
+"type":"array",
+"description":"List of dependencies for this external package, specifying dependency relationships explicitly",
+"items":{
+"type":"object",
+"description":"Dependency specification for an external package",
+"properties":{
+"id":{
+"type":"string",
+"description":"Explicit reference ID to another external package (provides unambiguous reference)"
+},
+"spec":{
+"type":"string",
+"description":"Spec string that matches an available external package"
+},
+"deptypes":{
+"oneOf":[
+{
+"type":"string",
+"description":"Single dependency type (e.g., 'build', 'link', 'run', 'test')"
+},
+{
+"type":"array",
+"items":{
+"type":"string",
+"description":"Dependency type (e.g., 'build', 'link', 'run', 'test')"
+},
+"description":"List of dependency types (e.g., ['build', 'link'])"
+}
+],
+"description":"Dependency types; if not specified, inferred from package recipe"
+},
+"virtuals":{
+"type":"string",
+"description":"Virtual package name this dependency provides (e.g., 'mpi')"
 }
 }
 }

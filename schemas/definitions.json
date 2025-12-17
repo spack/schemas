@@ -7,26 +7,33 @@
 "definitions":{
 "type":"array",
 "default":[],
+"description":"Named spec lists to be referred to with $name in the specs section of environments",
 "items":{
 "type":"object",
+"description":"Named definition entry containing a named spec list and optional conditional 'when' clause",
 "properties":{
 "when":{
-"type":"string"
+"type":"string",
+"description":"Python code condition evaluated as boolean. Specs are appended to the named list only if the condition is True. Available variables: platform, os, target, arch, arch_str, re, env, hostname"
 }
 },
 "additionalProperties":{
 "type":"array",
+"description":"List of specs to include in the environment, supporting both simple specs and matrix configurations",
 "default":[],
 "items":{
 "anyOf":[
 {
 "type":"object",
+"description":"Matrix configuration for generating multiple specs from combinations of constraints",
 "additionalProperties":false,
 "properties":{
 "matrix":{
 "type":"array",
+"description":"List of spec constraint lists whose cross product generates multiple specs",
 "items":{
 "type":"array",
+"description":"List of spec constraints for this matrix dimension",
 "items":{
 "type":"string"
 }
@@ -34,6 +41,7 @@
 },
 "exclude":{
 "type":"array",
+"description":"List of specific spec combinations to exclude from the matrix",
 "items":{
 "type":"string"
 }
@@ -41,7 +49,8 @@
 }
 },
 {
-"type":"string"
+"type":"string",
+"description":"Simple spec string"
 },
 {
 "type":"null"

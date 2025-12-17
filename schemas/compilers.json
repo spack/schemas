@@ -75,6 +75,7 @@
 "flags":{
 "type":"object",
 "additionalProperties":false,
+"description":"Flags to pass to the compiler during compilation and linking",
 "properties":{
 "cflags":{
 "anyOf":[
@@ -84,7 +85,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C compiler, e.g. -std=c11"
 },
 "cxxflags":{
 "anyOf":[
@@ -94,7 +96,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C++ compiler, e.g. -std=c++14"
 },
 "fflags":{
 "anyOf":[
@@ -104,7 +107,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for Fortran 77 compiler, e.g. -ffixed-line-length-none"
 },
 "cppflags":{
 "anyOf":[
@@ -114,7 +118,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C preprocessor, e.g. -DFOO=1"
 },
 "ldflags":{
 "anyOf":[
@@ -124,7 +129,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags passed to the compiler driver during linking, e.g. -Wl,--gc-sections"
 },
 "ldlibs":{
 "anyOf":[
@@ -134,7 +140,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for linker libraries, e.g. -lpthread"
 }
 }
 },
@@ -181,17 +188,19 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"List of non-default link directories to register at runtime as rpaths"
 },
 "environment":{
 "type":"object",
+"description":"Environment variable modifications to apply at runtime",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -200,27 +209,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -229,13 +231,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -244,13 +245,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -259,7 +259,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -269,7 +268,8 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of extra rpaths to inject by Spack's compiler wrappers"
 }
 }
 }

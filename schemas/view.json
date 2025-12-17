@@ -1,53 +1,78 @@
 {
 "$schema":"http://json-schema.org/draft-07/schema#",
 "title":"Spack view configuration file schema",
+"type":"object",
+"additionalProperties":false,
 "properties":{
 "view":{
+"description":"Environment filesystem view configuration for creating a directory with traditional structure where all files of installed packages are linked",
 "anyOf":[
 {
-"type":"boolean"
+"type":"boolean",
+"description":"Enable or disable default views. If 'true', the view is generated under .spack-env/view"
 },
 {
-"type":"string"
+"type":"string",
+"description":"Path where the default view should be created"
 },
 {
 "type":"object",
-"patternProperties":{
-"\\w+":{
+"description":"Advanced view configuration with one or more named view descriptors",
+"additionalProperties":{
+"description":"Named view descriptor (use 'default' for the view activated with environment)",
 "required":[
 "root"
 ],
 "additionalProperties":false,
 "properties":{
 "root":{
-"type":"string"
+"type":"string",
+"description":"Root directory path where the view will be created"
 },
 "link":{
-"type":"string",
-"pattern":"(roots|all|run)"
+"enum":[
+"roots",
+"all",
+"run"
+],
+"description":"Which specs to include: 'all' (environment roots with transitive run+link deps), 'run' (environment roots with transitive run deps), 'roots' (environment roots only)"
 },
 "link_type":{
-"type":"string"
+"type":"string",
+"enum":[
+"symlink",
+"hardlink",
+"copy"
+],
+"description":"How files are linked in the view: 'symlink' (default), 'hardlink', or 'copy'"
 },
 "select":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to include in the view (default: select everything)"
 },
 "exclude":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to exclude from the view (default: exclude nothing)"
 },
 "projections":{
 "type":"object",
-"patternProperties":{
-"all|\\w[\\w-]*":{
-"type":"string"
+"description":"Customize directory structure and naming schemes by mapping specs to format strings.",
+"properties":{
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
 }
-}
+},
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
 }
 }
 }

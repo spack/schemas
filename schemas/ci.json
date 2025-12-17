@@ -75,7 +75,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -167,7 +167,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -259,7 +259,9 @@
 },
 "header":{
 "type":"object",
-"additionalProperties":false
+"additionalProperties":{
+"type":"string"
+}
 },
 "allow":{
 "type":"array",
@@ -321,7 +323,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -413,7 +415,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -511,7 +513,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -603,7 +605,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -701,7 +703,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -793,7 +795,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -891,7 +893,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -983,7 +985,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1081,7 +1083,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1173,7 +1175,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1271,7 +1273,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1363,7 +1365,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1461,7 +1463,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1553,7 +1555,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"

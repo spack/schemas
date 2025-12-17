@@ -6,23 +6,29 @@
 "properties":{
 "bootstrap":{
 "type":"object",
+"description":"Configure how Spack bootstraps its own dependencies when needed",
 "properties":{
 "enable":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable or disable bootstrapping entirely"
 },
 "root":{
-"type":"string"
+"type":"string",
+"description":"Where to install bootstrapped dependencies"
 },
 "sources":{
 "type":"array",
 "items":{
 "type":"object",
+"description":"Bootstrap source configuration",
 "properties":{
 "name":{
-"type":"string"
+"type":"string",
+"description":"Name of the bootstrap source (e.g., 'github-actions-v0.6', 'spack-install')"
 },
 "metadata":{
-"type":"string"
+"type":"string",
+"description":"Path to metadata directory containing bootstrap source configuration"
 }
 },
 "additionalProperties":false,
@@ -30,15 +36,15 @@
 "name",
 "metadata"
 ]
-}
+},
+"description":"List of bootstrap sources tried in order. Each method may bootstrap different software depending on its type (e.g., pre-built binaries, source builds)"
 },
 "trusted":{
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "type":"boolean"
-}
-}
+},
+"description":"Controls which sources are enabled for automatic bootstrapping"
 }
 }
 }

@@ -7,27 +7,34 @@
 "spack":{
 "type":"object",
 "default":{},
+"description":"Spack environment configuration, including specs, view, and any other config section (config, packages, concretizer, mirrors, etc.)",
 "additionalProperties":false,
 "properties":{
 "bootstrap":{
 "type":"object",
+"description":"Configure how Spack bootstraps its own dependencies when needed",
 "properties":{
 "enable":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable or disable bootstrapping entirely"
 },
 "root":{
-"type":"string"
+"type":"string",
+"description":"Where to install bootstrapped dependencies"
 },
 "sources":{
 "type":"array",
 "items":{
 "type":"object",
+"description":"Bootstrap source configuration",
 "properties":{
 "name":{
-"type":"string"
+"type":"string",
+"description":"Name of the bootstrap source (e.g., 'github-actions-v0.6', 'spack-install')"
 },
 "metadata":{
-"type":"string"
+"type":"string",
+"description":"Path to metadata directory containing bootstrap source configuration"
 }
 },
 "additionalProperties":false,
@@ -35,15 +42,15 @@
 "name",
 "metadata"
 ]
-}
+},
+"description":"List of bootstrap sources tried in order. Each method may bootstrap different software depending on its type (e.g., pre-built binaries, source builds)"
 },
 "trusted":{
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "type":"boolean"
-}
-}
+},
+"description":"Controls which sources are enabled for automatic bootstrapping"
 }
 }
 },
@@ -53,18 +60,23 @@
 "required":[
 "build-group"
 ],
-"patternProperties":{
+"description":"Configuration for uploading build results to CDash",
+"properties":{
 "build-group":{
-"type":"string"
+"type":"string",
+"description":"Unique build group name for this stack"
 },
 "url":{
-"type":"string"
+"type":"string",
+"description":"CDash server URL"
 },
 "project":{
-"type":"string"
+"type":"string",
+"description":"CDash project name"
 },
 "site":{
-"type":"string"
+"type":"string",
+"description":"Site identifier for CDash reporting"
 }
 }
 },
@@ -139,6 +151,7 @@
 "flags":{
 "type":"object",
 "additionalProperties":false,
+"description":"Flags to pass to the compiler during compilation and linking",
 "properties":{
 "cflags":{
 "anyOf":[
@@ -148,7 +161,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C compiler, e.g. -std=c11"
 },
 "cxxflags":{
 "anyOf":[
@@ -158,7 +172,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C++ compiler, e.g. -std=c++14"
 },
 "fflags":{
 "anyOf":[
@@ -168,7 +183,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for Fortran 77 compiler, e.g. -ffixed-line-length-none"
 },
 "cppflags":{
 "anyOf":[
@@ -178,7 +194,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C preprocessor, e.g. -DFOO=1"
 },
 "ldflags":{
 "anyOf":[
@@ -188,7 +205,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags passed to the compiler driver during linking, e.g. -Wl,--gc-sections"
 },
 "ldlibs":{
 "anyOf":[
@@ -198,7 +216,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for linker libraries, e.g. -lpthread"
 }
 }
 },
@@ -245,17 +264,19 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"List of non-default link directories to register at runtime as rpaths"
 },
 "environment":{
 "type":"object",
+"description":"Environment variable modifications to apply at runtime",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -264,27 +285,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -293,13 +307,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -308,13 +321,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -323,7 +335,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -333,7 +344,8 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of extra rpaths to inject by Spack's compiler wrappers"
 }
 }
 }
@@ -343,44 +355,55 @@
 "concretizer":{
 "type":"object",
 "additionalProperties":false,
+"description":"Concretizer configuration that controls dependency selection, package reuse, and solver behavior",
 "properties":{
 "force":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Force re-concretization when concretizing environments"
 },
 "reuse":{
+"description":"Controls how aggressively Spack reuses installed packages and build caches during concretization",
 "oneOf":[
 {
-"type":"boolean"
+"type":"boolean",
+"description":"If true, reuse installed packages and build caches for all specs; if false, always perform fresh concretization"
 },
 {
 "type":"string",
 "enum":[
 "dependencies"
-]
+],
+"description":"Reuse installed packages and build caches only for dependencies, not root specs"
 },
 {
 "type":"object",
+"description":"Advanced reuse configuration with fine-grained control over which specs are reused",
 "properties":{
 "roots":{
-"type":"boolean"
+"type":"boolean",
+"description":"If true, root specs are reused; if false, only dependencies of root specs are reused"
 },
 "include":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of spec constraints. Reusable specs must match at least one constraint"
 },
 "exclude":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of spec constraints. Reusable specs must not match any constraint"
 },
 "from":{
 "type":"array",
+"description":"List of sources from which reused specs are taken",
 "items":{
 "type":"object",
+"description":"Source configuration for reusable specs",
 "properties":{
 "type":{
 "type":"string",
@@ -389,22 +412,26 @@
 "buildcache",
 "external",
 "environment"
-]
+],
+"description":"Type of source: 'local' (installed packages), 'buildcache' (remote binaries), 'external' (system packages), or 'environment' (from specific environment)"
 },
 "path":{
-"type":"string"
+"type":"string",
+"description":"Path to the source (for environment type sources)"
 },
 "include":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"Spec constraints that must be matched for this source (overrides global include)"
 },
 "exclude":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"Spec constraints that must not be matched for this source (overrides global exclude)"
 }
 }
 }
@@ -414,43 +441,63 @@
 ]
 },
 "enable_node_namespace":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable node namespace functionality in the concretizer"
 },
 "targets":{
 "type":"object",
+"description":"Controls which target microarchitectures are considered during concretization",
 "properties":{
 "host_compatible":{
-"type":"boolean"
+"type":"boolean",
+"description":"If true, only allow targets compatible with the current host; if false, allow any target (e.g., concretize for icelake while running on haswell)"
 },
 "granularity":{
 "type":"string",
 "enum":[
 "generic",
 "microarchitectures"
-]
+],
+"description":"Target selection granularity: 'microarchitectures' (e.g., haswell, skylake) or 'generic' (e.g., x86_64_v3, aarch64)"
 }
 }
 },
 "unify":{
+"description":"Controls whether environment specs are concretized together or separately",
 "oneOf":[
 {
-"type":"boolean"
+"type":"boolean",
+"description":"If true, concretize environment root specs together for unified dependencies; if false, concretize each spec independently"
 },
 {
 "type":"string",
 "enum":[
 "when_possible"
-]
+],
+"description":"Maximizes reuse, while allowing multiple instances of the same package"
 }
 ]
+},
+"compiler_mixing":{
+"oneOf":[
+{
+"type":"boolean"
+},
+{
+"type":"array"
+}
+],
+"description":"Whether to allow compiler mixing between link/run dependencies"
 },
 "splice":{
 "type":"object",
 "additionalProperties":false,
+"description":"Configuration for spec splicing: replacing dependencies with ABI-compatible alternatives to improve package reuse",
 "properties":{
 "explicit":{
 "type":"array",
 "default":[],
+"description":"List of explicit splice configurations to replace specific dependencies",
 "items":{
 "type":"object",
 "required":[
@@ -458,27 +505,33 @@
 "replacement"
 ],
 "additionalProperties":false,
+"description":"Explicit splice configuration",
 "properties":{
 "target":{
-"type":"string"
+"type":"string",
+"description":"Abstract spec to be replaced (e.g., 'mpi' or specific package)"
 },
 "replacement":{
-"type":"string"
+"type":"string",
+"description":"Concrete spec with hash to use as replacement (e.g., 'mpich/abcdef')"
 },
 "transitive":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"If true, use transitive splice (conflicts resolved using replacement dependencies); if false, use intransitive splice (conflicts resolved using original dependencies)"
 }
 }
 }
 },
 "automatic":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable automatic splicing for ABI-compatible packages (experimental feature)"
 }
 }
 },
 "duplicates":{
 "type":"object",
+"description":"Controls whether the dependency graph can contain multiple configurations of the same package",
 "properties":{
 "strategy":{
 "type":"string",
@@ -486,31 +539,71 @@
 "none",
 "minimal",
 "full"
-]
+],
+"description":"Duplication strategy: 'none' (single config per package), 'minimal' (allow build-tools duplicates), 'full' (experimental: allow full build-tool stack separation)"
 },
 "max_dupes":{
 "type":"object",
+"description":"Maximum number of duplicates allowed per package when using strategies that permit duplicates",
 "additionalProperties":{
 "type":"integer",
-"minimum":1
+"minimum":1,
+"description":"Maximum number of duplicate instances for this package"
 }
 }
 }
 },
 "static_analysis":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable static analysis to reduce concretization time by generating smaller ASP problems"
 },
 "timeout":{
 "type":"integer",
-"minimum":0
+"minimum":0,
+"description":"Maximum time in seconds for the solve phase (0 means no time limit)"
 },
 "error_on_timeout":{
-"type":"boolean"
+"type":"boolean",
+"description":"If true, timeout always results in error; if false, use best suboptimal solution found before timeout (yields unreproducible results)"
 },
 "os_compatible":{
 "type":"object",
 "additionalProperties":{
 "type":"array"
+},
+"description":"Compatibility mapping between operating systems for reuse of compilers and packages (key: target OS, value: list of compatible source OSes)"
+},
+"concretization_cache":{
+"type":"object",
+"description":"Configuration for caching solver outputs from successful concretization runs",
+"properties":{
+"enable":{
+"type":"boolean",
+"description":"Whether to utilize a cache of solver outputs from successful concretization runs"
+},
+"url":{
+"type":"string",
+"description":"Path to the location where Spack will root the concretization cache"
+},
+"entry_limit":{
+"type":"integer",
+"minimum":0,
+"description":"Limit on the number of concretization results that Spack will cache (0 disables pruning)"
+}
+}
+},
+"externals":{
+"type":"object",
+"description":"Configuration for how Spack handles external packages during concretization",
+"properties":{
+"completion":{
+"type":"string",
+"enum":[
+"architecture_only",
+"default_variants"
+],
+"description":"Controls how missing information (variants, etc.) is completed for external packages: 'architecture_only' completes only mandatory architectural information; 'default_variants' also completes missing variants using their default values"
+}
 }
 }
 }
@@ -518,9 +611,11 @@
 "config":{
 "type":"object",
 "default":{},
+"description":"Spack's basic configuration options",
 "properties":{
 "flags":{
 "type":"object",
+"description":"Build flag configuration options",
 "properties":{
 "keep_werror":{
 "type":"string",
@@ -528,11 +623,13 @@
 "all",
 "specific",
 "none"
-]
+],
+"description":"Whether to keep -Werror flags active in package builds"
 }
 }
 },
 "shared_linking":{
+"description":"Control how shared libraries are located at runtime on Linux",
 "anyOf":[
 {
 "type":"string",
@@ -549,17 +646,20 @@
 "enum":[
 "rpath",
 "runpath"
-]
+],
+"description":"Whether to use RPATH or RUNPATH for runtime library search paths"
 },
 "bind":{
-"type":"boolean"
+"type":"boolean",
+"description":"Embed absolute paths of dependent libraries directly in ELF binaries (experimental)"
 },
 "missing_library_policy":{
 "enum":[
 "error",
 "warn",
 "ignore"
-]
+],
+"description":"How to handle missing dynamic libraries after installation"
 }
 }
 }
@@ -567,9 +667,11 @@
 },
 "install_tree":{
 "type":"object",
+"description":"Installation tree configuration",
 "properties":{
 "root":{
-"type":"string"
+"type":"string",
+"description":"The location where Spack will install packages and their dependencies"
 },
 "padded_length":{
 "oneOf":[
@@ -580,40 +682,30 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"Length to pad installation paths to allow better relocation of binaries (true for max length, integer for specific length)"
 },
 "projections":{
 "type":"object",
-"patternProperties":{
-"all|\\w[\\w-]*":{
-"type":"string"
-}
-}
-}
-}
-},
-"concretization_cache":{
-"type":"object",
+"description":"Customize directory structure and naming schemes by mapping specs to format strings.",
 "properties":{
-"enable":{
-"type":"boolean"
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
+}
 },
-"url":{
-"type":"string"
-},
-"entry_limit":{
-"type":"integer",
-"minimum":0
-},
-"size_limit":{
-"type":"integer",
-"minimum":0
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
+}
 }
 }
 },
 "install_hash_length":{
 "type":"integer",
-"minimum":1
+"minimum":1,
+"description":"Length of hash used in installation directory names"
 },
 "build_stage":{
 "oneOf":[
@@ -626,86 +718,110 @@
 "type":"string"
 }
 }
-]
+],
+"description":"Temporary locations Spack can try to use for builds"
 },
 "stage_name":{
-"type":"string"
+"type":"string",
+"description":"Name format for build stage directories"
 },
 "develop_stage_link":{
-"type":"string"
+"type":"string",
+"description":"Name for development spec build stage directories"
 },
 "test_stage":{
-"type":"string"
+"type":"string",
+"description":"Directory in which to run tests and store test results"
 },
 "extensions":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of Spack extensions to load"
 },
 "template_dirs":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"Locations where templates should be found"
 },
 "license_dir":{
-"type":"string"
+"type":"string",
+"description":"Directory where licenses should be located"
 },
 "source_cache":{
-"type":"string"
+"type":"string",
+"description":"Location to cache downloaded tarballs and repositories"
 },
 "misc_cache":{
-"type":"string"
+"type":"string",
+"description":"Temporary directory to store long-lived cache files, such as indices of packages"
 },
 "environments_root":{
-"type":"string"
+"type":"string",
+"description":"Directory where Spack managed environments are created and stored"
 },
 "connect_timeout":{
 "type":"integer",
-"minimum":0
+"minimum":0,
+"description":"Abort downloads after this many seconds if no data is received (0 disables timeout)"
 },
 "verify_ssl":{
-"type":"boolean"
+"type":"boolean",
+"description":"When true, Spack will verify certificates of remote hosts when making SSL connections"
 },
 "ssl_certs":{
-"type":"string"
+"type":"string",
+"description":"Path to custom certificates for SSL verification"
 },
 "suppress_gpg_warnings":{
-"type":"boolean"
+"type":"boolean",
+"description":"Suppress GPG warnings from binary package verification"
 },
 "debug":{
-"type":"boolean"
+"type":"boolean",
+"description":"Enable debug mode for additional logging"
 },
 "checksum":{
-"type":"boolean"
+"type":"boolean",
+"description":"When true, Spack verifies downloaded source code using checksums"
 },
 "deprecated":{
-"type":"boolean"
+"type":"boolean",
+"description":"If true, Spack will fetch deprecated versions without warning"
 },
 "locks":{
-"type":"boolean"
+"type":"boolean",
+"description":"When true, concurrent instances of Spack will use locks to avoid conflicts (strongly recommended)"
 },
 "dirty":{
-"type":"boolean"
+"type":"boolean",
+"description":"When true, builds will NOT clean potentially harmful variables from the environment"
 },
 "build_language":{
-"type":"string"
+"type":"string",
+"description":"The language the build environment will use (C for English, empty string for user's environment)"
 },
 "build_jobs":{
 "type":"integer",
-"minimum":1
+"minimum":1,
+"description":"The maximum number of jobs to use for the build system (e.g. make -j), defaults to 16"
 },
 "concurrent_packages":{
 "type":"integer",
-"minimum":1
+"minimum":1,
+"description":"The maximum number of concurrent package builds a single Spack instance will run"
 },
 "ccache":{
-"type":"boolean"
+"type":"boolean",
+"description":"When true, Spack's compiler wrapper will use ccache when compiling C and C++"
 },
 "db_lock_timeout":{
 "type":"integer",
-"minimum":1
+"minimum":1,
+"description":"How long to wait to lock the Spack installation database"
 },
 "package_lock_timeout":{
 "anyOf":[
@@ -716,38 +832,58 @@
 {
 "type":"null"
 }
-]
+],
+"description":"How long to wait when attempting to modify a package (null for never timeout)"
 },
 "allow_sgid":{
-"type":"boolean"
+"type":"boolean",
+"description":"Allow installation on filesystems that don't allow setgid bit manipulation"
 },
 "install_status":{
-"type":"boolean"
-},
-"binary_index_root":{
-"type":"string"
+"type":"boolean",
+"description":"Whether to show status information in the terminal title during the build"
 },
 "url_fetch_method":{
+"anyOf":[
+{
+"enum":[
+"urllib",
+"curl"
+]
+},
+{
 "type":"string",
-"pattern":"^urllib$|^curl( .*)*"
+"pattern":"^curl "
+}
+],
+"description":"The default URL fetch method to use (urllib or curl)"
 },
 "additional_external_search_paths":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"Additional paths to search for external packages"
 },
 "binary_index_ttl":{
 "type":"integer",
-"minimum":0
+"minimum":0,
+"description":"Number of seconds a buildcache's index.json is cached locally before probing for updates"
 },
 "aliases":{
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "type":"string"
-}
-}
+},
+"description":"A mapping of aliases that can be used to define new Spack commands"
+},
+"installer":{
+"type":"string",
+"enum":[
+"old",
+"new"
+],
+"description":"Which installer to use. The new installer is experimental."
 }
 }
 },
@@ -965,7 +1101,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1057,7 +1193,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1149,7 +1285,9 @@
 },
 "header":{
 "type":"object",
-"additionalProperties":false
+"additionalProperties":{
+"type":"string"
+}
 },
 "allow":{
 "type":"array",
@@ -1211,7 +1349,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1303,7 +1441,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1401,7 +1539,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1493,7 +1631,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1591,7 +1729,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1683,7 +1821,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1781,7 +1919,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1873,7 +2011,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -1971,7 +2109,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2063,7 +2201,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2161,7 +2299,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2253,7 +2391,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2351,7 +2489,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2443,7 +2581,7 @@
 "variables":{
 "type":"object",
 "patternProperties":{
-"[\\w\\d\\-_\\.]+":{
+"^[\\w\\-\\.]+$":{
 "type":[
 "string",
 "number"
@@ -2527,26 +2665,33 @@
 "definitions":{
 "type":"array",
 "default":[],
+"description":"Named spec lists to be referred to with $name in the specs section of environments",
 "items":{
 "type":"object",
+"description":"Named definition entry containing a named spec list and optional conditional 'when' clause",
 "properties":{
 "when":{
-"type":"string"
+"type":"string",
+"description":"Python code condition evaluated as boolean. Specs are appended to the named list only if the condition is True. Available variables: platform, os, target, arch, arch_str, re, env, hostname"
 }
 },
 "additionalProperties":{
 "type":"array",
+"description":"List of specs to include in the environment, supporting both simple specs and matrix configurations",
 "default":[],
 "items":{
 "anyOf":[
 {
 "type":"object",
+"description":"Matrix configuration for generating multiple specs from combinations of constraints",
 "additionalProperties":false,
 "properties":{
 "matrix":{
 "type":"array",
+"description":"List of spec constraint lists whose cross product generates multiple specs",
 "items":{
 "type":"array",
+"description":"List of spec constraints for this matrix dimension",
 "items":{
 "type":"string"
 }
@@ -2554,6 +2699,7 @@
 },
 "exclude":{
 "type":"array",
+"description":"List of specific spec combinations to exclude from the matrix",
 "items":{
 "type":"string"
 }
@@ -2561,7 +2707,8 @@
 }
 },
 {
-"type":"string"
+"type":"string",
+"description":"Simple spec string"
 },
 {
 "type":"null"
@@ -2574,34 +2721,36 @@
 "develop":{
 "type":"object",
 "default":{},
-"additionalProperties":false,
-"patternProperties":{
-"\\w[\\w-]*":{
+"description":"Configuration for local development of Spack packages",
+"additionalProperties":{
 "type":"object",
 "additionalProperties":false,
+"description":"Name of a package to develop, with its spec and optional source path",
 "required":[
 "spec"
 ],
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec of the package to develop, e.g. hdf5@1.12.0"
 },
 "path":{
-"type":"string"
-}
+"type":"string",
+"description":"Path to the source code for this package, can be absolute or relative to the environment directory"
 }
 }
 }
 },
 "env_vars":{
 "type":"object",
+"description":"Environment variable modifications to apply at runtime",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -2610,27 +2759,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -2639,13 +2781,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -2654,13 +2795,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -2669,7 +2809,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -2678,21 +2817,40 @@
 "type":"array",
 "default":[],
 "additionalProperties":false,
+"description":"Include external configuration files to pull in configuration from other files/URLs for modular and reusable configurations",
 "items":{
 "anyOf":[
 {
+"type":"string",
+"description":"Simple include entry specifying path to required configuration file/directory"
+},
+{
 "type":"object",
+"description":"Advanced include entry with optional conditions and remote file support",
 "properties":{
 "when":{
+"type":"string",
+"description":"Include this config only when the condition (as Python code) evaluates to true"
+},
+"name":{
+"type":"string"
+},
+"path_override_env_var":{
 "type":"string"
 },
 "path":{
-"type":"string"
+"type":"string",
+"description":"Path to configuration file/directory (absolute, relative, or URL). URLs must be raw file content (GitHub/GitLab raw form). Supports file, ftp, http, https schemes and Spack/environment variables"
 },
 "sha256":{
-"type":"string"
+"type":"string",
+"description":"Required SHA256 hash for remote URLs to verify file integrity"
 },
 "optional":{
+"type":"boolean",
+"description":"If true, include only if path exists; if false (default), path is required and missing files cause errors"
+},
+"prefer_modify":{
 "type":"boolean"
 }
 },
@@ -2702,7 +2860,47 @@
 "additionalProperties":false
 },
 {
-"type":"string"
+"type":"object",
+"description":"Include configuration files from a git repository with conditional and optional support",
+"properties":{
+"git":{
+"type":"string",
+"description":"URL of the git repository to clone (e.g., https://github.com/spack/spack-configs)"
+},
+"branch":{
+"type":"string",
+"description":"Branch to check out from the repository"
+},
+"commit":{
+"type":"string",
+"description":"Specific commit SHA to check out from the repository"
+},
+"tag":{
+"type":"string",
+"description":"Tag to check out from the repository"
+},
+"paths":{
+"type":"array",
+"items":{
+"type":"string",
+"description":"Relative path within the repository to a configuration file to include"
+},
+"description":"List of relative paths within the repository where configuration files are located"
+},
+"when":{
+"type":"string",
+"description":"Include this config only when the condition (as Python code) evaluates to true"
+},
+"optional":{
+"type":"boolean",
+"description":"If true, include only if repository is accessible; if false (default), inaccessible repository causes errors"
+}
+},
+"required":[
+"git",
+"paths"
+],
+"additionalProperties":false
 }
 ]
 }
@@ -2710,15 +2908,17 @@
 "mirrors":{
 "type":"object",
 "default":{},
-"additionalProperties":false,
-"patternProperties":{
-"\\w[\\w-]*":{
+"description":"Configure local and remote mirrors that provide repositories of source tarballs and binary build caches for faster package installation",
+"additionalProperties":{
+"description":"Named mirror configuration that can be a simple URL string or detailed mirror entry with authentication and build cache settings",
 "anyOf":[
 {
-"type":"string"
+"type":"string",
+"description":"Simple mirror URL for basic source package or build cache access"
 },
 {
 "type":"object",
+"description":"Mirror configuration entry supporting both source package archives and binary build caches with optional authentication",
 "additionalProperties":false,
 "anyOf":[
 {
@@ -2739,28 +2939,36 @@
 ],
 "properties":{
 "source":{
-"type":"boolean"
+"type":"boolean",
+"description":"Whether this mirror provides source package archives (tarballs) for building from source"
 },
 "binary":{
-"type":"boolean"
+"type":"boolean",
+"description":"Whether this mirror provides binary build caches for installing precompiled packages"
 },
 "signed":{
-"type":"boolean"
+"type":"boolean",
+"description":"Whether to require GPG signature verification for packages from this mirror"
 },
 "fetch":{
+"description":"Configuration for fetching/downloading packages from this mirror",
 "anyOf":[
 {
-"type":"string"
+"type":"string",
+"description":"Simple URL string for basic mirror connections without authentication"
 },
 {
 "type":"object",
+"description":"Detailed connection configuration with authentication and custom settings",
 "additionalProperties":false,
 "properties":{
 "url":{
-"type":"string"
+"type":"string",
+"description":"URL pointing to the mirror directory, can be local filesystem (file://) or remote server (http://, https://, s3://, oci://)"
 },
 "access_pair":{
 "type":"object",
+"description":"Authentication credentials for accessing private mirrors with ID and secret pairs",
 "required":[
 "secret_variable"
 ],
@@ -2778,13 +2986,16 @@
 ],
 "properties":{
 "id":{
-"type":"string"
+"type":"string",
+"description":"Static access ID or username for authentication"
 },
 "id_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the access ID or username"
 },
 "secret_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the secret key, password, or access token"
 }
 }
 },
@@ -2792,38 +3003,46 @@
 "type":[
 "string",
 "null"
-]
+],
+"description":"AWS profile name to use for S3 mirror authentication"
 },
 "endpoint_url":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Custom endpoint URL for S3-compatible storage services"
 },
 "access_token_variable":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Environment variable containing an access token for OCI registry authentication"
 }
 }
 }
 ]
 },
 "push":{
+"description":"Configuration for pushing/uploading packages to this mirror for build cache creation",
 "anyOf":[
 {
-"type":"string"
+"type":"string",
+"description":"Simple URL string for basic mirror connections without authentication"
 },
 {
 "type":"object",
+"description":"Detailed connection configuration with authentication and custom settings",
 "additionalProperties":false,
 "properties":{
 "url":{
-"type":"string"
+"type":"string",
+"description":"URL pointing to the mirror directory, can be local filesystem (file://) or remote server (http://, https://, s3://, oci://)"
 },
 "access_pair":{
 "type":"object",
+"description":"Authentication credentials for accessing private mirrors with ID and secret pairs",
 "required":[
 "secret_variable"
 ],
@@ -2841,13 +3060,16 @@
 ],
 "properties":{
 "id":{
-"type":"string"
+"type":"string",
+"description":"Static access ID or username for authentication"
 },
 "id_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the access ID or username"
 },
 "secret_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the secret key, password, or access token"
 }
 }
 },
@@ -2855,32 +3077,38 @@
 "type":[
 "string",
 "null"
-]
+],
+"description":"AWS profile name to use for S3 mirror authentication"
 },
 "endpoint_url":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Custom endpoint URL for S3-compatible storage services"
 },
 "access_token_variable":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Environment variable containing an access token for OCI registry authentication"
 }
 }
 }
 ]
 },
 "autopush":{
-"type":"boolean"
+"type":"boolean",
+"description":"Automatically push packages to this build cache immediately after they are installed locally"
 },
 "url":{
-"type":"string"
+"type":"string",
+"description":"URL pointing to the mirror directory, can be local filesystem (file://) or remote server (http://, https://, s3://, oci://)"
 },
 "access_pair":{
 "type":"object",
+"description":"Authentication credentials for accessing private mirrors with ID and secret pairs",
 "required":[
 "secret_variable"
 ],
@@ -2898,13 +3126,16 @@
 ],
 "properties":{
 "id":{
-"type":"string"
+"type":"string",
+"description":"Static access ID or username for authentication"
 },
 "id_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the access ID or username"
 },
 "secret_variable":{
-"type":"string"
+"type":"string",
+"description":"Environment variable name containing the secret key, password, or access token"
 }
 }
 },
@@ -2912,46 +3143,49 @@
 "type":[
 "string",
 "null"
-]
+],
+"description":"AWS profile name to use for S3 mirror authentication"
 },
 "endpoint_url":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Custom endpoint URL for S3-compatible storage services"
 },
 "access_token_variable":{
 "type":[
 "string",
 "null"
-]
+],
+"description":"Environment variable containing an access token for OCI registry authentication"
 }
 }
 }
 ]
-}
 }
 },
 "modules":{
 "type":"object",
+"description":"Configure automatic generation of module files for Environment Modules and Lmod to manage user environments at HPC centers",
 "properties":{
 "prefix_inspections":{
 "type":"object",
-"additionalProperties":false,
-"patternProperties":{
-"^[\\w-]*":{
+"description":"Global prefix inspection settings that apply to all module sets, controlling which subdirectories are added to environment variables",
+"additionalProperties":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
-}
+},
+"description":"List of environment variables to update with this prefix-relative path if it exists"
 }
 }
 },
 "additionalProperties":{
 "type":"object",
 "default":{},
+"description":"Named module set configuration (e.g., 'default') defining how module files are generated for a specific set of packages",
 "additionalProperties":false,
 "properties":{
 "use_view":{
@@ -2962,25 +3196,31 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"Generate modules relative to an environment view instead of install tree (True for default view, string for named view, False to disable)"
 },
 "arch_folder":{
-"type":"boolean"
+"type":"boolean",
+"description":"Whether to include architecture-specific subdirectories in module file paths"
 },
 "roots":{
 "type":"object",
+"description":"Custom root directories for different module file types",
 "properties":{
 "tcl":{
-"type":"string"
+"type":"string",
+"description":"Root directory for TCL module files"
 },
 "lmod":{
-"type":"string"
+"type":"string",
+"description":"Root directory for Lmod module files"
 }
 }
 },
 "enable":{
 "type":"array",
 "default":[],
+"description":"List of module types to automatically generate during package installation",
 "items":{
 "type":"string",
 "enum":[
@@ -2992,65 +3232,83 @@
 "lmod":{
 "type":"object",
 "default":{},
+"description":"Configuration for Lmod hierarchical module system",
 "additionalKeysAreSpecs":true,
 "properties":{
 "verbose":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Enable verbose output during module file generation"
 },
 "hash_length":{
 "type":"integer",
 "minimum":0,
-"default":7
+"default":7,
+"description":"Length of package hash to include in module file names (0-32, shorter hashes may cause naming conflicts)"
 },
 "include":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to explicitly include for module file generation, even if they would normally be excluded"
 },
 "exclude":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to exclude from module file generation"
 },
 "exclude_implicits":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Exclude implicit dependencies from module file generation while still allowing autoloading"
 },
 "defaults":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs for which to create default module symlinks when multiple versions exist"
 },
 "hide_implicits":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Hide implicit dependency modules from 'module avail' but still allow autoloading (requires module system support)"
 },
 "naming_scheme":{
-"type":"string"
+"type":"string",
+"description":"Custom naming scheme for module files using format strings"
 },
 "projections":{
 "type":"object",
-"patternProperties":{
-"all|\\w[\\w-]*":{
-"type":"string"
+"description":"Custom directory structure and naming convention for module files using projection format",
+"properties":{
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
 }
+},
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
 }
 },
 "all":{
 "type":"object",
 "default":{},
+"description":"Default configuration applied to all module files in this module set",
 "additionalProperties":false,
 "properties":{
 "filter":{
 "type":"object",
 "default":{},
+"description":"Filter out specific environment variable modifications from module files",
 "additionalProperties":false,
 "properties":{
 "exclude_env_vars":{
@@ -3058,12 +3316,14 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of environment variable names to exclude from module file modifications"
 }
 }
 },
 "template":{
-"type":"string"
+"type":"string",
+"description":"Path to custom template file for generating module files"
 },
 "autoload":{
 "type":"string",
@@ -3072,7 +3332,8 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Automatically load dependency modules when this module is loaded"
 },
 "prerequisites":{
 "type":"string",
@@ -3081,24 +3342,28 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Mark dependency modules as prerequisites instead of autoloading them"
 },
 "conflict":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of modules that conflict with this one and should not be loaded simultaneously"
 },
 "load":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of additional modules to load when this module is loaded"
 },
 "suffixes":{
 "type":"object",
+"description":"Add custom suffixes to module names based on spec matching for better readability",
 "additionalKeysAreSpecs":true,
 "additionalProperties":{
 "type":"string"
@@ -3106,13 +3371,14 @@
 },
 "environment":{
 "type":"object",
+"description":"Custom environment variable modifications to apply in this module file",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3121,27 +3387,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3150,13 +3409,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3165,13 +3423,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3180,7 +3437,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -3192,24 +3448,28 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of core compilers that are always available at the top level of the Lmod hierarchy"
 },
 "hierarchy":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of packages to use for building the Lmod module hierarchy (typically compilers and MPI implementations)"
 },
 "core_specs":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs that should be placed in the core level of the Lmod hierarchy regardless of dependencies"
 },
 "filter_hierarchy_specs":{
 "type":"object",
+"description":"Filter which specs are included at different levels of the Lmod hierarchy based on spec matching",
 "additionalKeysAreSpecs":true,
 "additionalProperties":{
 "type":"array",
@@ -3223,11 +3483,13 @@
 "additionalProperties":{
 "type":"object",
 "default":{},
+"description":"Configuration for individual module file behavior and content customization",
 "additionalProperties":false,
 "properties":{
 "filter":{
 "type":"object",
 "default":{},
+"description":"Filter out specific environment variable modifications from module files",
 "additionalProperties":false,
 "properties":{
 "exclude_env_vars":{
@@ -3235,12 +3497,14 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of environment variable names to exclude from module file modifications"
 }
 }
 },
 "template":{
-"type":"string"
+"type":"string",
+"description":"Path to custom template file for generating module files"
 },
 "autoload":{
 "type":"string",
@@ -3249,7 +3513,8 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Automatically load dependency modules when this module is loaded"
 },
 "prerequisites":{
 "type":"string",
@@ -3258,24 +3523,28 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Mark dependency modules as prerequisites instead of autoloading them"
 },
 "conflict":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of modules that conflict with this one and should not be loaded simultaneously"
 },
 "load":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of additional modules to load when this module is loaded"
 },
 "suffixes":{
 "type":"object",
+"description":"Add custom suffixes to module names based on spec matching for better readability",
 "additionalKeysAreSpecs":true,
 "additionalProperties":{
 "type":"string"
@@ -3283,13 +3552,14 @@
 },
 "environment":{
 "type":"object",
+"description":"Custom environment variable modifications to apply in this module file",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3298,27 +3568,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3327,13 +3590,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3342,13 +3604,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3357,7 +3618,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -3368,65 +3628,83 @@
 "tcl":{
 "type":"object",
 "default":{},
+"description":"Configuration for TCL module files compatible with Environment Modules",
 "additionalKeysAreSpecs":true,
 "properties":{
 "verbose":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Enable verbose output during module file generation"
 },
 "hash_length":{
 "type":"integer",
 "minimum":0,
-"default":7
+"default":7,
+"description":"Length of package hash to include in module file names (0-32, shorter hashes may cause naming conflicts)"
 },
 "include":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to explicitly include for module file generation, even if they would normally be excluded"
 },
 "exclude":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to exclude from module file generation"
 },
 "exclude_implicits":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Exclude implicit dependencies from module file generation while still allowing autoloading"
 },
 "defaults":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs for which to create default module symlinks when multiple versions exist"
 },
 "hide_implicits":{
 "type":"boolean",
-"default":false
+"default":false,
+"description":"Hide implicit dependency modules from 'module avail' but still allow autoloading (requires module system support)"
 },
 "naming_scheme":{
-"type":"string"
+"type":"string",
+"description":"Custom naming scheme for module files using format strings"
 },
 "projections":{
 "type":"object",
-"patternProperties":{
-"all|\\w[\\w-]*":{
-"type":"string"
+"description":"Custom directory structure and naming convention for module files using projection format",
+"properties":{
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
 }
+},
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
 }
 },
 "all":{
 "type":"object",
 "default":{},
+"description":"Default configuration applied to all module files in this module set",
 "additionalProperties":false,
 "properties":{
 "filter":{
 "type":"object",
 "default":{},
+"description":"Filter out specific environment variable modifications from module files",
 "additionalProperties":false,
 "properties":{
 "exclude_env_vars":{
@@ -3434,12 +3712,14 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of environment variable names to exclude from module file modifications"
 }
 }
 },
 "template":{
-"type":"string"
+"type":"string",
+"description":"Path to custom template file for generating module files"
 },
 "autoload":{
 "type":"string",
@@ -3448,7 +3728,8 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Automatically load dependency modules when this module is loaded"
 },
 "prerequisites":{
 "type":"string",
@@ -3457,24 +3738,28 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Mark dependency modules as prerequisites instead of autoloading them"
 },
 "conflict":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of modules that conflict with this one and should not be loaded simultaneously"
 },
 "load":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of additional modules to load when this module is loaded"
 },
 "suffixes":{
 "type":"object",
+"description":"Add custom suffixes to module names based on spec matching for better readability",
 "additionalKeysAreSpecs":true,
 "additionalProperties":{
 "type":"string"
@@ -3482,13 +3767,14 @@
 },
 "environment":{
 "type":"object",
+"description":"Custom environment variable modifications to apply in this module file",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3497,27 +3783,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3526,13 +3805,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3541,13 +3819,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3556,7 +3833,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -3567,11 +3843,13 @@
 "additionalProperties":{
 "type":"object",
 "default":{},
+"description":"Configuration for individual module file behavior and content customization",
 "additionalProperties":false,
 "properties":{
 "filter":{
 "type":"object",
 "default":{},
+"description":"Filter out specific environment variable modifications from module files",
 "additionalProperties":false,
 "properties":{
 "exclude_env_vars":{
@@ -3579,12 +3857,14 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of environment variable names to exclude from module file modifications"
 }
 }
 },
 "template":{
-"type":"string"
+"type":"string",
+"description":"Path to custom template file for generating module files"
 },
 "autoload":{
 "type":"string",
@@ -3593,7 +3873,8 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Automatically load dependency modules when this module is loaded"
 },
 "prerequisites":{
 "type":"string",
@@ -3602,24 +3883,28 @@
 "run",
 "direct",
 "all"
-]
+],
+"description":"Mark dependency modules as prerequisites instead of autoloading them"
 },
 "conflict":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of modules that conflict with this one and should not be loaded simultaneously"
 },
 "load":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of additional modules to load when this module is loaded"
 },
 "suffixes":{
 "type":"object",
+"description":"Add custom suffixes to module names based on spec matching for better readability",
 "additionalKeysAreSpecs":true,
 "additionalProperties":{
 "type":"string"
@@ -3627,13 +3912,14 @@
 },
 "environment":{
 "type":"object",
+"description":"Custom environment variable modifications to apply in this module file",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3642,27 +3928,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3671,13 +3950,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3686,13 +3964,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -3701,7 +3978,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -3711,15 +3987,14 @@
 },
 "prefix_inspections":{
 "type":"object",
-"additionalProperties":false,
-"patternProperties":{
-"^[\\w-]*":{
+"description":"Control which package subdirectories are added to environment variables (e.g., bin to PATH, lib to LIBRARY_PATH)",
+"additionalProperties":{
 "type":"array",
 "default":[],
 "items":{
 "type":"string"
-}
-}
+},
+"description":"List of environment variables to update with this prefix-relative path if it exists"
 }
 }
 }
@@ -3727,14 +4002,17 @@
 },
 "packages":{
 "type":"object",
+"description":"Package-specific build settings and external package configurations",
 "default":{},
 "properties":{
 "all":{
 "type":"object",
+"description":"Default settings that apply to all packages (can be overridden by package-specific settings)",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "require":{
+"description":"Package requirements that must be satisfied during concretization",
 "oneOf":[
 {
 "type":"array",
@@ -3748,22 +4026,27 @@
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where exactly one must be satisfied"
 },
 "any_of":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where at least one must be satisfied"
 },
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Single spec requirement that must be satisfied"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom error message when requirement is not satisfiable"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this requirement"
 }
 }
 },
@@ -3779,6 +4062,7 @@
 ]
 },
 "prefer":{
+"description":"Strong package preferences that influence concretization without imposing hard constraints",
 "type":"array",
 "items":{
 "oneOf":[
@@ -3787,13 +4071,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -3804,6 +4091,7 @@
 }
 },
 "conflict":{
+"description":"Package conflicts that prevent certain spec combinations",
 "type":"array",
 "items":{
 "oneOf":[
@@ -3812,13 +4100,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -3830,6 +4121,7 @@
 },
 "target":{
 "type":"array",
+"description":"Ordered list of soft preferences for target architectures for all packages (ignored if the concretizer can reuse existing installations)",
 "default":[],
 "items":{
 "type":"string"
@@ -3837,6 +4129,7 @@
 },
 "compiler":{
 "type":"array",
+"description":"Soft preferences for compiler specs for all packages (deprecated)",
 "default":[],
 "items":{
 "type":"string"
@@ -3844,10 +4137,12 @@
 },
 "buildable":{
 "type":"boolean",
+"description":"Whether packages should be built from source (false prevents building)",
 "default":true
 },
 "permissions":{
 "type":"object",
+"description":"File permissions settings for package installations",
 "additionalProperties":false,
 "properties":{
 "read":{
@@ -3856,7 +4151,8 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can read the files installed by a package"
 },
 "write":{
 "type":"string",
@@ -3864,31 +4160,33 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can write to the files installed by a package"
 },
 "group":{
-"type":"string"
+"type":"string",
+"description":"The group that owns the files installed by a package"
 }
 }
 },
 "package_attributes":{
 "type":"object",
+"description":"Class-level attributes to assign to package instances (accessible in package.py methods)",
 "additionalProperties":false,
 "patternProperties":{
-"\\w+":{}
+"^[a-zA-Z_]\\w*$":{}
 }
 },
 "providers":{
 "type":"object",
+"description":"Soft preferences for providers of virtual packages (ignored if the concretizer can reuse existing installations)",
 "default":{},
-"additionalProperties":false,
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "type":"array",
+"description":"Ordered list of preferred providers for this virtual package",
 "default":[],
 "items":{
 "type":"string"
-}
 }
 }
 },
@@ -3903,7 +4201,8 @@
 "type":"string"
 }
 }
-]
+],
+"description":"Soft variant preferences as a single spec string or list of variant specifications (ignored if the concretizer can reuse existing installations)"
 }
 },
 "deprecatedProperties":[
@@ -3919,10 +4218,12 @@
 },
 "additionalProperties":{
 "type":"object",
+"description":"Package-specific settings that override defaults from 'all'",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "require":{
+"description":"Package requirements that must be satisfied during concretization",
 "oneOf":[
 {
 "type":"array",
@@ -3936,22 +4237,27 @@
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where exactly one must be satisfied"
 },
 "any_of":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs where at least one must be satisfied"
 },
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Single spec requirement that must be satisfied"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom error message when requirement is not satisfiable"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this requirement"
 }
 }
 },
@@ -3967,6 +4273,7 @@
 ]
 },
 "prefer":{
+"description":"Strong package preferences that influence concretization without imposing hard constraints",
 "type":"array",
 "items":{
 "oneOf":[
@@ -3975,13 +4282,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -3992,6 +4302,7 @@
 }
 },
 "conflict":{
+"description":"Package conflicts that prevent certain spec combinations",
 "type":"array",
 "items":{
 "oneOf":[
@@ -4000,13 +4311,16 @@
 "additionalProperties":false,
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply"
 },
 "message":{
-"type":"string"
+"type":"string",
+"description":"Custom message explaining the constraint"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Conditional spec that triggers this constraint"
 }
 }
 },
@@ -4018,6 +4332,7 @@
 },
 "version":{
 "type":"array",
+"description":"Ordered list of soft preferences for versions for this package (ignored if the concretizer can reuse existing installations)",
 "default":[],
 "items":{
 "anyOf":[
@@ -4032,10 +4347,12 @@
 },
 "buildable":{
 "type":"boolean",
+"description":"Whether this package should be built from source (false prevents building)",
 "default":true
 },
 "permissions":{
 "type":"object",
+"description":"File permissions settings for package installations",
 "additionalProperties":false,
 "properties":{
 "read":{
@@ -4044,7 +4361,8 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can read the files installed by a package"
 },
 "write":{
 "type":"string",
@@ -4052,18 +4370,21 @@
 "user",
 "group",
 "world"
-]
+],
+"description":"Who can write to the files installed by a package"
 },
 "group":{
-"type":"string"
+"type":"string",
+"description":"The group that owns the files installed by a package"
 }
 }
 },
 "package_attributes":{
 "type":"object",
+"description":"Class-level attributes to assign to package instances (accessible in package.py methods)",
 "additionalProperties":false,
 "patternProperties":{
-"\\w+":{}
+"^[a-zA-Z_]\\w*$":{}
 }
 },
 "variants":{
@@ -4077,48 +4398,74 @@
 "type":"string"
 }
 }
-]
+],
+"description":"Soft variant preferences as a single spec string or list of variant specifications (ignored if the concretizer can reuse existing installations)"
 },
 "externals":{
 "type":"array",
+"description":"List of external, system-installed instances of this package",
 "items":{
 "type":"object",
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec string describing this external package instance. Typically name@version and relevant variants"
 },
 "prefix":{
-"type":"string"
+"type":"string",
+"description":"Installation prefix path for this external package (typically /usr, *excluding* bin/, lib/, etc.)"
 },
 "modules":{
 "type":"array",
+"description":"Environment modules to load for this external package",
 "items":{
 "type":"string"
 }
 },
+"id":{
+"type":"string"
+},
 "extra_attributes":{
 "type":"object",
+"description":"Additional information needed by the package to use this external",
 "additionalProperties":{
 "type":"string"
 },
 "properties":{
 "compilers":{
 "type":"object",
+"description":"Compiler executable paths for external compiler packages",
+"properties":{
+"c":{
+"type":"string",
+"description":"Path to the C compiler executable (e.g. /usr/bin/gcc)"
+},
+"cxx":{
+"type":"string",
+"description":"Path to the C++ compiler executable (e.g. /usr/bin/g++)"
+},
+"fortran":{
+"type":"string",
+"description":"Path to the Fortran compiler executable (e.g. /usr/bin/gfortran)"
+}
+},
 "patternProperties":{
-"(^\\w[\\w-]*)":{
+"^\\w":{
 "type":"string"
 }
-}
+},
+"additionalProperties":false
 },
 "environment":{
 "type":"object",
+"description":"Environment variable modifications to apply at runtime",
 "default":{},
 "additionalProperties":false,
 "properties":{
 "set":{
+"description":"Environment variables to set to specific values",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -4127,27 +4474,20 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "unset":{
-"type":"array",
+"description":"Environment variables to remove/unset",
 "default":[],
+"type":"array",
 "items":{
-"anyOf":[
-{
 "type":"string"
-},
-{
-"type":"number"
-}
-]
 }
 },
 "prepend_path":{
+"description":"Environment variables to prepend values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -4156,13 +4496,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "append_path":{
+"description":"Environment variables to append values to (typically PATH-like variables)",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -4171,13 +4510,12 @@
 "type":"number"
 }
 ]
-}
 }
 },
 "remove_path":{
+"description":"Values to remove from PATH-like environment variables",
 "type":"object",
-"patternProperties":{
-"\\w[\\w-]*":{
+"additionalProperties":{
 "anyOf":[
 {
 "type":"string"
@@ -4186,7 +4524,6 @@
 "type":"number"
 }
 ]
-}
 }
 }
 }
@@ -4196,7 +4533,8 @@
 "default":[],
 "items":{
 "type":"string"
-}
+},
+"description":"List of extra rpaths to inject by Spack's compiler wrappers"
 },
 "implicit_rpaths":{
 "anyOf":[
@@ -4209,11 +4547,13 @@
 {
 "type":"boolean"
 }
-]
+],
+"description":"List of non-default link directories to register at runtime as rpaths"
 },
 "flags":{
 "type":"object",
 "additionalProperties":false,
+"description":"Flags to pass to the compiler during compilation and linking",
 "properties":{
 "cflags":{
 "anyOf":[
@@ -4223,7 +4563,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C compiler, e.g. -std=c11"
 },
 "cxxflags":{
 "anyOf":[
@@ -4233,7 +4574,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C++ compiler, e.g. -std=c++14"
 },
 "fflags":{
 "anyOf":[
@@ -4243,7 +4585,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for Fortran 77 compiler, e.g. -ffixed-line-length-none"
 },
 "cppflags":{
 "anyOf":[
@@ -4253,7 +4596,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for C preprocessor, e.g. -DFOO=1"
 },
 "ldflags":{
 "anyOf":[
@@ -4263,7 +4607,8 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags passed to the compiler driver during linking, e.g. -Wl,--gc-sections"
 },
 "ldlibs":{
 "anyOf":[
@@ -4273,8 +4618,48 @@
 {
 "type":"null"
 }
-]
+],
+"description":"Flags for linker libraries, e.g. -lpthread"
 }
+}
+}
+}
+},
+"dependencies":{
+"type":"array",
+"description":"List of dependencies for this external package, specifying dependency relationships explicitly",
+"items":{
+"type":"object",
+"description":"Dependency specification for an external package",
+"properties":{
+"id":{
+"type":"string",
+"description":"Explicit reference ID to another external package (provides unambiguous reference)"
+},
+"spec":{
+"type":"string",
+"description":"Spec string that matches an available external package"
+},
+"deptypes":{
+"oneOf":[
+{
+"type":"string",
+"description":"Single dependency type (e.g., 'build', 'link', 'run', 'test')"
+},
+{
+"type":"array",
+"items":{
+"type":"string",
+"description":"Dependency type (e.g., 'build', 'link', 'run', 'test')"
+},
+"description":"List of dependency types (e.g., ['build', 'link'])"
+}
+],
+"description":"Dependency types; if not specified, inferred from package recipe"
+},
+"virtuals":{
+"type":"string",
+"description":"Virtual package name this dependency provides (e.g., 'mpi')"
 }
 }
 }
@@ -4290,45 +4675,54 @@
 }
 },
 "repos":{
+"description":"Configuration for package repositories that Spack searches for packages",
 "oneOf":[
 {
 "type":"array",
 "items":{
 "type":"string",
 "description":"Path to a Spack package repository directory"
-}
+},
+"description":"Legacy format: list of local paths to package repository directories"
 },
 {
 "type":"object",
+"description":"Named repositories mapping configuration names to repository definitions",
 "additionalProperties":{
 "oneOf":[
 {
 "type":"string",
-"description":"Path to a Spack package repository directory"
+"description":"Path to a local Spack package repository directory containing repo.yaml and packages/"
 },
 {
 "type":"object",
 "properties":{
 "git":{
-"type":"string"
+"type":"string",
+"description":"Git repository URL for remote package repository"
 },
 "branch":{
-"type":"string"
+"type":"string",
+"description":"Git branch name to checkout (default branch if not specified)"
 },
 "commit":{
-"type":"string"
+"type":"string",
+"description":"Specific git commit hash to pin the repository to"
 },
 "tag":{
-"type":"string"
+"type":"string",
+"description":"Git tag name to pin the repository to"
 },
 "destination":{
-"type":"string"
+"type":"string",
+"description":"Custom local directory path where the Git repository should be cloned"
 },
 "paths":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of relative paths (from the Git repository root) that contain Spack package repositories (overrides spack-repo-index.yaml)"
 }
 },
 "additionalProperties":false
@@ -4342,49 +4736,61 @@
 "toolchains":{
 "type":"object",
 "default":{},
+"description":"Define named compiler sets (toolchains) that group compiler constraints under a single user-defined name for easy reference with specs like %my_toolchain",
 "additionalProperties":{
+"description":"Named toolchain definition that can be referenced in specs to apply a complex set of compiler choices for C, C++, and Fortran",
 "oneOf":[
 {
-"type":"string"
+"type":"string",
+"description":"Simple toolchain alias containing a spec string directly"
 },
 {
 "type":"array",
+"description":"List of conditional compiler constraints and specifications that define the toolchain behavior",
 "items":{
 "type":"object",
+"description":"Individual toolchain entry with a spec constraint and optional condition for when it applies",
 "properties":{
 "spec":{
-"type":"string"
+"type":"string",
+"description":"Spec constraint to apply such as compiler selection (%c=llvm), flags (cflags=-O3), or other virtual dependencies (%mpi=openmpi)"
 },
 "when":{
-"type":"string"
+"type":"string",
+"description":"Condition that determines when this spec constraint is applied, typically checking for language dependencies like %c, %cxx, %fortran, or other virtual packages like %mpi"
 }
 }
 }
 }
-]
+],
+"default":[]
 }
 },
 "upstreams":{
 "type":"object",
 "default":{},
-"patternProperties":{
-"\\w[\\w-]*":{
+"description":"Configuration for chaining Spack installations. Point this Spack instance to other Spack installations to use their installed packages",
+"additionalProperties":{
 "type":"object",
 "default":{},
 "additionalProperties":false,
+"description":"Named upstream Spack instance configuration",
 "properties":{
 "install_tree":{
-"type":"string"
+"type":"string",
+"description":"Path to the opt/spack directory of the upstream Spack installation (or the install_tree root from its config.yaml)"
 },
 "modules":{
 "type":"object",
+"description":"Configuration to use modules generated by the upstream Spack instance",
 "properties":{
 "tcl":{
-"type":"string"
+"type":"string",
+"description":"Path to TCL modules directory of the upstream instance"
 },
 "lmod":{
-"type":"string"
-}
+"type":"string",
+"description":"Path to Lmod modules directory of the upstream instance"
 }
 }
 }
@@ -4392,51 +4798,74 @@
 }
 },
 "view":{
+"description":"Environment filesystem view configuration for creating a directory with traditional structure where all files of installed packages are linked",
 "anyOf":[
 {
-"type":"boolean"
+"type":"boolean",
+"description":"Enable or disable default views. If 'true', the view is generated under .spack-env/view"
 },
 {
-"type":"string"
+"type":"string",
+"description":"Path where the default view should be created"
 },
 {
 "type":"object",
-"patternProperties":{
-"\\w+":{
+"description":"Advanced view configuration with one or more named view descriptors",
+"additionalProperties":{
+"description":"Named view descriptor (use 'default' for the view activated with environment)",
 "required":[
 "root"
 ],
 "additionalProperties":false,
 "properties":{
 "root":{
-"type":"string"
+"type":"string",
+"description":"Root directory path where the view will be created"
 },
 "link":{
-"type":"string",
-"pattern":"(roots|all|run)"
+"enum":[
+"roots",
+"all",
+"run"
+],
+"description":"Which specs to include: 'all' (environment roots with transitive run+link deps), 'run' (environment roots with transitive run deps), 'roots' (environment roots only)"
 },
 "link_type":{
-"type":"string"
+"type":"string",
+"enum":[
+"symlink",
+"hardlink",
+"copy"
+],
+"description":"How files are linked in the view: 'symlink' (default), 'hardlink', or 'copy'"
 },
 "select":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to include in the view (default: select everything)"
 },
 "exclude":{
 "type":"array",
 "items":{
 "type":"string"
-}
+},
+"description":"List of specs to exclude from the view (default: exclude nothing)"
 },
 "projections":{
 "type":"object",
-"patternProperties":{
-"all|\\w[\\w-]*":{
-"type":"string"
+"description":"Customize directory structure and naming schemes by mapping specs to format strings.",
+"properties":{
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
 }
-}
+},
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
 }
 }
 }
@@ -4446,17 +4875,21 @@
 },
 "specs":{
 "type":"array",
+"description":"List of specs to include in the environment, supporting both simple specs and matrix configurations",
 "default":[],
 "items":{
 "anyOf":[
 {
 "type":"object",
+"description":"Matrix configuration for generating multiple specs from combinations of constraints",
 "additionalProperties":false,
 "properties":{
 "matrix":{
 "type":"array",
+"description":"List of spec constraint lists whose cross product generates multiple specs",
 "items":{
 "type":"array",
+"description":"List of spec constraints for this matrix dimension",
 "items":{
 "type":"string"
 }
@@ -4464,6 +4897,7 @@
 },
 "exclude":{
 "type":"array",
+"description":"List of specific spec combinations to exclude from the matrix",
 "items":{
 "type":"string"
 }
@@ -4471,7 +4905,8 @@
 }
 },
 {
-"type":"string"
+"type":"string",
+"description":"Simple spec string"
 },
 {
 "type":"null"
@@ -4482,6 +4917,7 @@
 "include_concrete":{
 "type":"array",
 "default":[],
+"description":"List of paths to other environments. Includes concrete specs from their spack.lock files without modifying the source environments. Useful for phased deployments where you want to build on existing concrete specs.",
 "items":{
 "type":"string"
 }
