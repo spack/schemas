@@ -5,6 +5,11 @@
 "additionalProperties":false,
 "properties":{
 "env_vars":{
+"$ref":"#/definitions/env_modifications"
+}
+},
+"definitions":{
+"env_modifications":{
 "type":"object",
 "description":"Environment variable modifications to apply at runtime",
 "default":{},
