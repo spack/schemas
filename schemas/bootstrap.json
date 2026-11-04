@@ -45,6 +45,16 @@
 "type":"boolean"
 },
 "description":"Controls which sources are enabled for automatic bootstrapping"
+},
+"dev":{
+"type":"object",
+"description":"Dev Bootstrap configuration",
+"properties":{
+"enable_source":{
+"type":"boolean",
+"description":"Enable bootstrapping dev dependencies from source"
+}
+}
 }
 }
 }

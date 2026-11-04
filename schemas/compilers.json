@@ -192,6 +192,24 @@
 "description":"List of non-default link directories to register at runtime as rpaths"
 },
 "environment":{
+"$ref":"#/definitions/env_modifications"
+},
+"extra_rpaths":{
+"type":"array",
+"default":[],
+"items":{
+"type":"string"
+},
+"description":"List of extra rpaths to inject by Spack's compiler wrappers"
+}
+}
+}
+}
+}
+}
+},
+"definitions":{
+"env_modifications":{
 "type":"object",
 "description":"Environment variable modifications to apply at runtime",
 "default":{},
@@ -259,19 +277,6 @@
 "type":"number"
 }
 ]
-}
-}
-}
-},
-"extra_rpaths":{
-"type":"array",
-"default":[],
-"items":{
-"type":"string"
-},
-"description":"List of extra rpaths to inject by Spack's compiler wrappers"
-}
-}
 }
 }
 }

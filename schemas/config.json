@@ -82,19 +82,7 @@
 "description":"Length to pad installation paths to allow better relocation of binaries (true for max length, integer for specific length)"
 },
 "projections":{
-"type":"object",
-"description":"Customize directory structure and naming schemes by mapping specs to format strings.",
-"properties":{
-"all":{
-"type":"string",
-"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
-}
-},
-"additionalKeysAreSpecs":true,
-"additionalProperties":{
-"type":"string",
-"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
-}
+"$ref":"#/definitions/projections"
 }
 }
 },
@@ -123,7 +111,7 @@
 },
 "develop_stage_link":{
 "type":"string",
-"description":"Name for development spec build stage directories"
+"description":"Name for development spec build stage directories. Setting to None will disable develop stage links."
 },
 "test_stage":{
 "type":"string",
@@ -207,7 +195,7 @@
 },
 "concurrent_packages":{
 "type":"integer",
-"minimum":1,
+"minimum":0,
 "description":"The maximum number of concurrent package builds a single Spack instance will run"
 },
 "ccache":{
@@ -280,7 +268,53 @@
 "new"
 ],
 "description":"Which installer to use. The new installer is experimental."
+},
+"sandbox":{
+"type":"object",
+"description":"Restrict filesystem and network access during builds.",
+"additionalProperties":false,
+"properties":{
+"enable":{
+"type":"boolean",
+"description":"Enable or disable the build sandbox."
+},
+"allow_network":{
+"type":"boolean",
+"description":"Allow TCP network access during the build phase."
+},
+"allow_read":{
+"type":"array",
+"items":{
+"type":"string"
+},
+"description":"Additional paths with read and execute permissions."
+},
+"allow_write":{
+"type":"array",
+"items":{
+"type":"string"
+},
+"description":"Additional paths with write and execute permissions."
 }
+}
+}
+}
+}
+},
+"definitions":{
+"projections":{
+"type":"object",
+"description":"Customize directory structure and naming schemes by mapping specs to format strings.",
+"properties":{
+"all":{
+"type":"string",
+"description":"Default projection format string used as fallback for all specs that do not match other entries. Uses spec format syntax like \"{name}/{version}/{hash:16}\"."
+}
+},
+"additionalKeysAreSpecs":true,
+"additionalProperties":{
+"type":"string",
+"description":"Projection format string for specs matching this key. Uses spec format syntax supporting tokens like {name}, {version}, {compiler.name}, {^dependency.name}, etc."
 }
 }
 }
